@@ -26,12 +26,8 @@ def create_consumer(first_name,last_name):
 
     min_value = 10000000
     max_value = 99999999
-    if len(last_name) > len(first_name):
-        consumer_amount = len(last_name)
-    else:
-        consumer_amount = len(first_name)
 
-    for x in range(consumer_amount):
+    for x in range(400):
 
         random_first_name = random.choice(first_name)
 

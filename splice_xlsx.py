@@ -2,6 +2,13 @@ import pandas as pd
 import seaborn as sns
 import matplotlib
 
+from password import password as pwd
+password = pwd
+
+# Used for pgAdmin 4 Server connect and utilize postgresql
+import psycopg2
+from psycopg2.extras import execute_values
+
 file_name = 'Tetrahydra-canabinol .xlsx'
 
 # 'ProductID', 'Name', 'Strain', 'Price ', 'Size ', 'Nug', 'Quality ',
@@ -20,7 +27,7 @@ def create_dataframe(file):
     chemical_data_frame = dataframe.drop(columns = chemical_columns_drop,inplace=False)
     chemical_data_frame.to_excel('chemical_data.xlsx', index=False, sheet_name='chemical')
 
-    print(chemical_data_frame)
+
 
     # Commerce Dataframe wont need chemical data as it is not necessary for purchases other than total CBD as it can be used as a label for customer reference
     commerce_columns_drop = ['THCa%', 'CBGA', 'Total CBG', 'Δ9-THC']
@@ -29,7 +36,7 @@ def create_dataframe(file):
     commerce_dataframe = dataframe.drop(columns = commerce_columns_drop,inplace=False)
     commerce_dataframe.to_excel('commerce_data.xlsx', index=False, sheet_name='commerce')
 
-    print(commerce_dataframe)
+
     return commerce_dataframe,chemical_data_frame,dataframe
 
 
@@ -54,11 +61,12 @@ fig1 =plt.figure(figsize=(10, 6))
 
 ax1 = fig1.add_subplot(projection='3d')
 
-print(total_cbg,total_cbd,thca_percentage)
+
 # ax1.scatter3D(thca_percentage, total_cbd, total_cbg,s=delta_9, c=  cbga,cmap='viridis', marker ='^')
 ax1.scatter3D(thca_percentage,total_cbd,total_cbg,cmap='viridis',marker ='^')
 ax1.set_xlabel('Total CBD')
 ax1.set_ylabel("Total CBG")
 ax1.set_zlabel("THCa %")
 
-plt.show()
+# if input("Type y to show figure") == 'y':
+#     plt.show()
