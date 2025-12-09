@@ -1,12 +1,3 @@
-# E-Commerce- LIT Farms/Artificial Research Data and Software Management(ARDSM)/Tetrahydrocannabinol
-<img width="440" height="400" alt="image" src="https://github.com/user-attachments/assets/fd39e44f-c01a-4396-8af5-f67d8282b774" />
-
-pgAdmin 4/ PostgresSQL. 
-
-<img width="200" height="400" alt="image" src="https://github.com/user-attachments/assets/e5caa501-658f-4a9b-a0e5-38829a4d2fe7" />
-
-<img width="600" height="450" alt="image" src="https://github.com/user-attachments/assets/137cdafb-9dbb-4999-b75f-642dbe49b342" />
-
 ## Installation 
 
 As an important note. I utilized python 3.1 intrepreter to avoid conflicts with dependies 
@@ -15,6 +6,7 @@ pip install openpyxl
 pip install pandas
 pip install psycopg2-binary
 pip install matplotlib
+
 
 ```
 
@@ -106,14 +98,10 @@ WHERE customerid IN (
 	HAVING COUNT(*) > 1 
 );
 ```
-
-<img width="413" height="108" alt="image" src="https://github.com/user-attachments/assets/e3e3c242-295f-40fb-bacf-891e5dcf7616" />
-
  #### To Test this we will be using row 1
  "Patricia"	"Martin"	41343379
 
-<img width="562" height="156" alt="image" src="https://github.com/user-attachments/assets/60080fa7-525d-4225-87b1-3dbee156edf5" />
-
+    ### Insert Image here
 
 #### Insert into table customers 
 ```
@@ -147,8 +135,8 @@ HAVING COUNT(*) > 1
 
 Now, I will run the query to delete these additional rows.
 
-# Query to delete if any duplicates CustomerIDs
-
+### Query to delete if any duplicates CustomerIDs
+```
 DELETE FROM Customers 
 WHERE customerid IN ( 
 	SELECT customerid 
@@ -156,25 +144,29 @@ WHERE customerid IN (
 	Group by customerid 
 	HAVING COUNT(*) > 1 
 );
+```
 
-
-
+# INSERT IMAGE HERE Delete image
 
 
 
 
 
 I will now insert:
- # "Patricia"	"Martin"	41343379 
+ #### "Patricia"	"Martin"	41343379 
 
 back into the customers table.
 
-# Insert into table customers 
 
+
+
+#### Insert into table customers 
+```
 INSERT INTO customers ( first_name, last_name, customerid) 
 VALUES ( "Patricia",	"Martin",41343379 );
+```
 
-
+# INSERT IMAGE HERE 
 
 
 
@@ -183,16 +175,100 @@ VALUES ( "Patricia",	"Martin",41343379 );
 
 ## Chapter 2 
 
-Inserting Product information,
+This chapter, we will cover inserting the xslx from LIT Farms product list. 
+It will include splicing the data into multiple dataframes to then upload to a database as a table.
 
-Inserting Chemical data 
+Please View -> Tetrahydra-canabinol.xslx
+
+```
+import pandas as pd
+import matplotlib
+
+from password import password as pwd
+password = pwd
+
+# Used for pgAdmin 4 Server connect and utilize postgresql
+import psycopg2
+from psycopg2.extras import execute_values
+
+file_name = 'Tetrahydra-canabinol .xlsx'
+
+# 'ProductID', 'Name', 'Strain', 'Price ', 'Size ', 'Nug', 'Quality ',
+# 'THCa%', 'Total CBD', 'CBGA', 'Total CBG', 'Δ9-THC'
+def create_dataframe(file):
+
+    # Opens xlsx as dataframe
+    dataframe = pd.read_excel(file_name)
+
+    # Drops Source column, won't be necessary for database
+    dataframe.drop(columns='source',inplace=True)
+
+    # Dataframe for chemical data -> Price and Size is related to purchase
+    chemical_columns_drop = ['Price ', 'Size ',]
+    # Create DF from original df without price and size
+    chemical_data_frame = dataframe.drop(columns = chemical_columns_drop,inplace=False)
+    chemical_data_frame.to_excel('chemical_data.xlsx', index=False, sheet_name='chemical')
 
 
-Tables → Columns for Products 
-#### 'ProductID' int, 'Name' varchar(255), 'Strain' varchar(255), 'Price ' int, 'Size ' char, 'Nug'   # char, 'Quality 'char, 'Total CBD',
 
+    # Commerce Dataframe wont need chemical data as it is not necessary for purchases other than total CBD as it can be used as a label for customer reference
+    commerce_columns_drop = ['THCa%', 'CBGA', 'Total CBG', 'Δ9-THC']
+
+    # Dataframe for E-Commerce
+    commerce_dataframe = dataframe.drop(columns = commerce_columns_drop,inplace=False)
+    commerce_dataframe.to_excel('commerce_data.xlsx', index=False, sheet_name='commerce')
+
+
+    return commerce_dataframe,chemical_data_frame,dataframe
+
+def plot_data():
+    commcerce, chemical, dataframe = create_dataframe(file_name)
+
+    # 'THCa%', 'Total CBD', 'CBGA', 'Total CBG', 'Δ9-THC'
+    # There are the columns that we will turn into a list for the sake of plotting
+    # Using .tolist()
+    name = chemical['Name'].to_numpy().tolist()
+    total_cbd = chemical['Total CBD'].to_numpy().tolist()
+    thca_percentage = chemical['THCa%'].values.tolist()
+    cbga = chemical['CBGA'].values.tolist()
+    total_cbg = chemical['Total CBG'].values.tolist()
+
+    delta_9 = chemical['Δ9-THC'].values.tolist()
+
+    import matplotlib.pyplot as plt
+
+    # Import the mplot3d toolkit (necessary for 3d axes setup)
+    from mpl_toolkits.mplot3d import Axes3D
+    fig1 =plt.figure(figsize=(10, 6))
+
+    ax1 = fig1.add_subplot(projection='3d')
+
+
+    # ax1.scatter3D(thca_percentage, total_cbd, total_cbg,s=delta_9, c=  cbga,cmap='viridis', marker ='^')
+    ax1.scatter3D(thca_percentage,total_cbd,total_cbg,cmap='viridis',marker ='^')
+    ax1.set_xlabel('Total CBD')
+    ax1.set_ylabel("Total CBG")
+    ax1.set_zlabel("THCa %")
+
+    if input("Type y to show figure") == 'y':
+        plt.show()
+
+
+if __name__ == '__main__':
+    plot_data()
+
+```
+
+
+#### Tables → Columns for Products  
+#### 'ProductID', 'product_name', 'Strain', 'Price ', 'Size ', 'Nug', 'Quality ', 'Total CBD',
+
+
+# INSERT IMAGE OF PRODUCTS HERE
+##### This is the query to create the product table if it does not exists
+```
 CREATE TABLE IF NOT EXISTS products (  
-	productid int, 
+	productid SERIAL PRIMARY KEY, 
 	product_name varchar(255), 
 	Strain char(16),
 	price float,
@@ -201,16 +277,19 @@ CREATE TABLE IF NOT EXISTS products (
 	quality char(4),
 	total_cbd float
 );
+commerce_query = ('INSERT INTO products (productid, product_name , Strain ,price ,size_g ,nug ,quality,total_cbd) VALUES %s')
+execute_values(cur,commerce_query,commerce_data.values.tolist())
+```
 
-This is the query to create the product table if it does not exists
 
 Now we will make the chemical data table and call it thc_data
 With columns:
-#### 'ProductID' int, 'Name' varchar(255), 'Strain' varchar(255),  'Nug' char, 'Quality 'char,
+#### Tables → Columns for THC_data
+#### 'ProductID', 'product_name', 'Strain',  'Nug', 'Quality ',
 #### 'THCa%', 'Total CBD', 'CBGA', 'Total CBG', 'Δ9-THC'
 ```
 CREATE TABLE IF NOT EXISTS thc_data (
-	productid int, 
+	productid SERIAL PRIMARY KEY, 
 	product_name varchar(255), 
 	strain char(16),
 	nug char(6),
@@ -221,6 +300,7 @@ CREATE TABLE IF NOT EXISTS thc_data (
 	total_cbg float,
 	delta_nine_thc float
 );
+
 ```
 
 #### Python Example commerce:
@@ -271,6 +351,3 @@ cur.execute("""
 chemical_query = ('INSERT INTO thc_data (productid, product_name , Strain ,nug ,quality,thca_percentage,total_cbd,cbga,total_cbg,delta_nine_thc) VALUES %s')
 execute_values(cur,chemical_query,chemical_data.values.tolist())
 ````
-
-
-
