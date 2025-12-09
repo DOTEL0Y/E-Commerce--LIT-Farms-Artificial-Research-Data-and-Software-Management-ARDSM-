@@ -102,8 +102,8 @@ WHERE customerid IN (
  "Patricia"	"Martin"	41343379
 
     ### Insert Image here
+<img width="684" height="97" alt="image" src="https://github.com/user-attachments/assets/2df2ca2d-ca0b-4181-b48e-3e3264379960" />
 
-#### Insert into table customers 
 ```
 INSERT INTO customers ( first_name, last_name, customerid) 
 VALUES ( 'Oscary', 'Dotel', 41343379);
@@ -116,7 +116,7 @@ Note the customerID from
 Run all the code from above to verify that there are duplicate customerIDs 
 
 
-
+<img width="675" height="136" alt="image" src="https://github.com/user-attachments/assets/fd0d6ab9-ea91-4e0f-a127-c008ff0f1dd6" />
 
 
 
@@ -146,7 +146,8 @@ WHERE customerid IN (
 );
 ```
 
-# INSERT IMAGE HERE Delete image
+<img width="413" height="108" alt="image" src="https://github.com/user-attachments/assets/38da2e20-22a1-4f2e-beab-8ac2cc5665d9" />
+
 
 
 
@@ -155,7 +156,7 @@ WHERE customerid IN (
 I will now insert:
  #### "Patricia"	"Martin"	41343379 
 
-back into the customers table.
+back into the customer's table.
 
 
 
@@ -166,7 +167,8 @@ INSERT INTO customers ( first_name, last_name, customerid)
 VALUES ( "Patricia",	"Martin",41343379 );
 ```
 
-# INSERT IMAGE HERE 
+<img width="388" height="90" alt="image" src="https://github.com/user-attachments/assets/207785b6-a7fa-46d5-8afd-763550fd40dd" />
+ 
 
 
 
@@ -175,7 +177,7 @@ VALUES ( "Patricia",	"Martin",41343379 );
 
 ## Chapter 2 
 
-This chapter, we will cover inserting the xslx from LIT Farms product list. 
+In this chapter, we will cover inserting the XLSX from the LIT Farms product list. 
 It will include splicing the data into multiple dataframes to then upload to a database as a table.
 
 Please View -> Tetrahydra-canabinol.xslx
@@ -264,8 +266,9 @@ if __name__ == '__main__':
 #### 'ProductID', 'product_name', 'Strain', 'Price ', 'Size ', 'Nug', 'Quality ', 'Total CBD',
 
 
-# INSERT IMAGE OF PRODUCTS HERE
-##### This is the query to create the product table if it does not exists
+<img width="659" height="306" alt="image" src="https://github.com/user-attachments/assets/dd3496df-7705-4c51-a43e-e8ee01e43998" />
+
+##### This is the query to create the product table if it does not exist
 ```
 CREATE TABLE IF NOT EXISTS products (  
 	productid SERIAL PRIMARY KEY, 
