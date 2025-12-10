@@ -184,7 +184,7 @@ VALUES ( "Patricia",	"Martin",41343379 );
 
 
 
-## Chapter 2 
+## Chapter 2: Create and insert LIT Farms DATA
 
 In this chapter, we will cover inserting the XLSX from the LIT Farms product list. 
 It will include splicing the data into multiple dataframes to then upload to a database as a table.
@@ -365,3 +365,110 @@ cur.execute("""
 chemical_query = ('INSERT INTO thc_data (productid, product_name , Strain ,nug ,quality,thca_percentage,total_cbd,cbga,total_cbg,delta_nine_thc) VALUES %s')
 execute_values(cur,chemical_query,chemical_data.values.tolist())
 ````
+<img width="1550" height="300" alt="image" src="https://github.com/user-attachments/assets/a4cda697-3e0c-49e9-aba4-875251c0c524" />
+
+
+## Chapter 3: Create artificial Orders and OrderHistory data
+
+The goal of this is now to take the query the customerID and with that data construct artificial orders from 2024, Dec -> 2025, Dec
+
+
+Below is the code that allowed to construction. 
+Note that I imported pandas to achieve this 
+```
+import pandas as pd
+import psycopg2
+import pandas
+from password import password
+
+import random
+from datetime import date,timedelta
+
+
+
+
+# Random Date function
+
+def random_date_no_time(start_date,end_date):
+
+    dif_days = (end_date-start_date).days
+
+    random_day = random.randint(0,dif_days)
+
+    random_date = start_date + timedelta(days =random_day)
+
+    return random_date
+from psycopg2.extras import  execute_values
+def generate_customer_orders():
+    orders = []
+    try:
+
+        # Establish connection to database
+        conn = psycopg2.connect(
+            host='localhost',
+            database='postgres',
+            user='postgres',
+            password=password,
+            port='5432'
+        )
+        # Create cursor variable to execute
+        cur = conn.cursor()
+
+        # Obtain data query from Customers
+        gather_customer_data = 'SELECT * FROM customers'
+        cur.execute(gather_customer_data)
+
+        # Obtained data in list format
+        data_customers = cur.fetchall()
+
+        # list -> to df for column drops
+        customer_data = pd.DataFrame(data_customers, columns=['first_name','last_name','customerID'])
+
+        # Dropping columns first_name, last_name
+        customerID_data = customer_data.iloc[:,[2]]
+
+
+        # Obtain data of products query
+        gather_products_data = 'SELECT productID FROM Products'
+        cur.execute(gather_products_data)
+        products_data = cur.fetchall()
+        products_data = pd.DataFrame(products_data,)
+
+
+
+        # Datetime parameters for 1 year
+        start_date = date(2024, 12,31)
+        end_date = date(2025,12,31)
+
+
+        # Int var for random orderID
+        min_value = 10000000
+        max_value = 99999999
+        print(customerID_data)
+        for id in customerID_data['customerID']:
+
+
+            number_of_orders = random.randint(1,5)
+
+            for order in range(number_of_orders):
+                random_date = random_date_no_time(start_date,end_date)
+                random_orderid = random.randint(min_value,max_value)
+
+                create_order = (random_orderid, id,random_date)
+                orders.append(create_order)
+
+        # orders = pd.DataFrame(orders,columns=['OrderID','CustomerID','Date'])
+        print(orders)
+        conn.commit()
+        conn.close()
+    except psycopg2.DatabaseError as e:
+        print(f"Error {e}")
+    return orders
+
+if __name__ == '__main__':
+
+    generate_customer_orders()
+
+```
+
+
