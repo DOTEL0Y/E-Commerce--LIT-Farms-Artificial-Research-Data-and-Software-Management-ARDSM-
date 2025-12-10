@@ -342,6 +342,7 @@ execute_values(cur,commerce_query,commerce_data.values.tolist())
 
 
 
+<img width="1237" height="213" alt="image" src="https://github.com/user-attachments/assets/ad8763e7-845b-435a-926d-894872db63d2" />
 
 
 #### Python Example Chemical data:
