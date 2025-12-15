@@ -576,6 +576,28 @@ if __name__ == '__main__':
 
 ### Now to import this into the database for later use! (back to create_database.py)
 
+```
 
+    # Create OrderHistory table
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS order_History(
+        detailsid int PRIMARY KEY,
+        orderid int,
+        productid int[],
+        quantity int,
+        total_price decimal
+        )
+    """)
+    
+    order_details_query = 'INSERT INTO order_History (DetailsID,orderid,productid,quantity,total_price) VALUES %s'
+    execute_values(cur,order_details_query,generate_order_history())
+```
+<img width="795" height="175" alt="image" src="https://github.com/user-attachments/assets/78a38c5e-b696-48dc-9f04-bf7a2018c26f" />
+
+Similar code to previous table creations. 
+Only difference in this query is productid. Considering it is an array of products that the costumer purchased – bracket notation is required to INSERT the data correctly.
+
+
+This concludes chapter 3.  Next will be picking out the ideal algorithm to create our machine learning model. Additionally, the next chapter will be my experience experimenting with such models. Furthormore, if I can compare and constrast some models to see how they differ in applying it to this dataset and its implication with dealing with ths dataset would be interesting. 
 
 
