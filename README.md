@@ -597,7 +597,6 @@ if __name__ == '__main__':
 Similar code to previous table creations. 
 Only difference in this query is productid. Considering it is an array of products that the costumer purchased – bracket notation is required to INSERT the data correctly.
 
-
-This concludes chapter 3.  Next will be picking out the ideal algorithm to create our machine learning model. Additionally, the next chapter will be my experience experimenting with such models. Furthormore, if I can compare and constrast some models to see how they differ in applying it to this dataset and its implication with dealing with ths dataset would be interesting. 
+ 
 
 
